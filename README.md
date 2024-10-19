@@ -11,6 +11,6 @@ All raw sequences are publish in NCBI GenBank under the Bioproject ___________
 
 This repository contains:
 
-- **Code used to filter the sequences using the QIIME2 pipeline and its associated metadata:** QIIME2Bacteria., QIIME2Fungi., metadata_bacteria_qiime.txt and metadata_fungi_qiime.txt
+- **Code used to filter the sequences using the QIIME2 pipeline and its associated metadata:** QIIME2Bacteria.ipynb, QIIME2Fungi.ipynb, metadata_bacteria_qiime.txt and metadata_fungi_qiime.txt
 - **QIIME artifacts imported to R:** DADA2 Tables (TableDADA2Bacteria.qza and TableDADA2Fungi.qza), phylogenetic tres (RootedTreeBacteria.qza and RootedTreeFungi.qza), taxonomy tables (TaxonomyBacteria.qza and TaxonomyFungi.qza) and beta diversity matrix (unifrac_bacteria.qza, wunifrac_bacteria.qza, unifrac_fungi.qza and wunifrac_fungi.qza)
-- **R code for data analysis:**
+- **R code for data analysis and metadata**
