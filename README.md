@@ -13,3 +13,5 @@ This repository contains two folders:
 
 - **QIIME2:** With all code used to filter the sequences using the QIIME2 pipeline and its associated metadata (QIIME2Bacteria.ipynb, QIIME2Fungi.ipynb, metadata_bacteria_qiime.txt and metadata_fungi_qiime.txt)
 - **R:** That contains all QIIME artifacts imported to R (DADA2 Tables:TableDADA2Bacteria.qza and TableDADA2Fungi.qza; phylogenetic tres: RootedTreeBacteria.qza and RootedTreeFungi.qza; taxonomy tables: TaxonomyBacteria.qza and TaxonomyFungi.qza, and beta diversity matrix: unifrac_bacteria.qza, wunifrac_bacteria.qza, unifrac_fungi.qza and wunifrac_fungi.qza), and all code used to analyze the data, including the metadata files with the description of the data. 
+
+All files are named indicating the microbial community the belong to (bacteria or fungi)
