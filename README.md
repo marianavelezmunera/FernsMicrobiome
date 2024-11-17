@@ -1,5 +1,7 @@
 # Changes in the microbial communities of a tree fern along an elevation gradient.
-This GitHub Repository contains code and data included in:
+This GitHub Repository contains code and data included in 
+
+Mariana Vélez-Múnera, Morena Avitia, Eria A. Rebollar et al. Changes in the phyllosphere and rhizosphere of a cloud forest tree fern along an elevation gradient, 15 November 2024, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-5374836/v1]
 
 # Summary
 
@@ -7,7 +9,7 @@ The diversity of plant-associated microbial communities is shaped by both host-a
 
 # Data availability
 
-All raw sequences are publish in NCBI GenBank under the Bioproject ___________
+All raw sequences are publish in NCBI GenBank under the Bioproject PRJNA1180585
 
 This repository contains two folders:
 
