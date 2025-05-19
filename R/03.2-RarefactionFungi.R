@@ -14,48 +14,43 @@ ggplot(data=rarefaction_fungi,aes(x=Sample,y=Species,col=Site))+
   xlab("Sequencing depth")+ylab("ASV number")+
   scale_color_manual(values = moma.colors("Warhol",34))
 
-# Plot for each site
+# By sample type 
 
-unique(rarefaction_fungi$Site)
+rarefaccion_hongos1<-rarefaccion_hongos %>% mutate(muestra=case_when(grepl("^HF",Site)~"Phyllosphere",grepl("^HR",Site)~"Rhizosphere",grepl("^HS",Site)~"Soil"))
 
-nrow(subset(rarefaction_fungi,Site=="HF1A"))+ nrow(subset(rarefaction_fungi,Site=="HF1B"))+nrow(subset(rarefaction_fungi,Site=="HF1C"))+
-  nrow(subset(rarefaction_fungi,Site=="HF2A"))+nrow(subset(rarefaction_fungi,Site=="HF2B"))+nrow(subset(rarefaction_fungi,Site=="HF2C"))+
-  nrow(subset(rarefaction_fungi,Site=="HF3A"))+nrow(subset(rarefaction_fungi,Site=="HF3B"))+nrow(subset(rarefaction_fungi,Site=="HF3C"))+
-  nrow(subset(rarefaction_fungi,Site=="HF4A"))+nrow(subset(rarefaction_fungi,Site=="HF4B"))+nrow(subset(rarefaction_fungi,Site=="HF4C"))+
-  nrow(subset(rarefaction_fungi,Site=="HF5A"))+nrow(subset(rarefaction_fungi,Site=="HF5B"))+nrow(subset(rarefaction_fungi,Site=="HF5C"))
+rarefacion_hongos_filo<-subset(rarefaccion_hongos1,muestra=="Phyllosphere")
+rarefacion_hongos_rizo<-subset(rarefaccion_hongos1,muestra=="Rhizosphere")
+rarefacion_hongos_suelo<-subset(rarefaccion_hongos1,muestra=="Soil")
 
-nrow(subset(rarefaction_fungi,Site=="HR1A"))+nrow(subset(rarefaction_fungi,Site=="HR1B"))+nrow(subset(rarefaction_fungi,Site=="HR1C"))+
-  nrow(subset(rarefaction_fungi,Site=="HR2A"))+nrow(subset(rarefaction_fungi,Site=="HR2B"))+nrow(subset(rarefaction_fungi,Site=="HR2C"))+
-  nrow(subset(rarefaction_fungi,Site=="HR3A"))+nrow(subset(rarefaction_fungi,Site=="HR3B"))+nrow(subset(rarefaction_fungi,Site=="HR3C"))+
-  nrow(subset(rarefaction_fungi,Site=="HR4A"))+nrow(subset(rarefaction_fungi,Site=="HR4B"))+nrow(subset(rarefaction_fungi,Site=="HR4C"))+
-  nrow(subset(rarefaction_fungi,Site=="HR5A"))+nrow(subset(rarefaction_fungi,Site=="HR5B"))+nrow(subset(rarefaction_fungi,Site=="HR5C"))
-
-nrow(subset(rarefaction_fungi,Site=="HS1"))+
-  nrow(subset(rarefaction_fungi,Site=="HS2"))+
-  nrow(subset(rarefaction_fungi,Site=="HS3"))+
-  nrow(subset(rarefaction_fungi,Site=="HS4"))+
-  nrow(subset(rarefaction_fungi,Site=="HS5"))
-
-plot_fungi<-c(rep("2210",4923),rep("1978",4963),rep("2178",2678),rep("2007",3216),rep("2018",2289),rep("2210",3776),rep("1978",2617),rep("2178",5449),rep("2007",3702),rep("2018",3673),rep("2210",2227),rep("1978",1617),rep("2178",1703),rep("2007",1009),rep("2018",1728))
-
-rarefaction_fungi$plot<-plot_fungi
-
-sample_fungi<-c(rep("Phyllo",18069),rep("Rhizo",19217),rep("Soil",8284))
-
-rarefaction_fungi$sample<-sample_fungi
-rarefaction_fungi$plot<-as.factor(rarefaction_fungi$plot)
-
-
-ggplot(data=rarefaction_fungi,aes(x=Sample,y=Species,col=Site))+
-  geom_line(aes(linetype=sample))+
+rare_hongos_filo_plot<-ggplot(data=rarefacion_hongos_filo,aes(x=Sample,y=Species,col=Site))+
+  geom_line()+
   theme_biome_utils()+
   theme(legend.position = "none")+
   xlab("Sequencing depth")+ylab("ASV number")+
-  facet_wrap(~plot)
+  scale_color_manual(values = moma.colors("Warhol",35))+
+  geom_text(data=. %>% arrange(desc(Sample)) %>%
+              group_by(Site) %>%
+              slice(1),aes(label=Site),position=position_nudge(0.5), hjust=0, show.legend=FALSE,size=3)+
+  ggtitle("c. Fungal phyllosphere")
 
 
-# Delete unuselful vectors
-rm(sample_fungi)
+rare_hongos_rizo_plot<-ggplot(data=rarefacion_hongos_rizo,aes(x=Sample,y=Species,col=Site))+
+  geom_line()+
+  theme_biome_utils()+
+  theme(legend.position = "none")+
+  xlab("Sequencing depth")+ylab("ASV number")+
+  scale_color_manual(values = moma.colors("Warhol",35))+
+  geom_text(data=. %>% arrange(desc(Sample)) %>%
+              group_by(Site) %>%
+              slice(1),aes(label=Site),position=position_nudge(0.5), hjust=0, show.legend=FALSE,size=3)+
+  ggtitle("d. Fungal rhizosphere")
+
+ggplot(data=rarefacion_bact_suelo,aes(x=Sample,y=Species,col=Site))+
+  geom_line()+
+  theme_biome_utils()+
+  theme(legend.position = "none")+
+  xlab("Sequencing depth")+ylab("ASV number")+
+  scale_color_manual(values = moma.colors("Warhol",35))
 rm(plot_fungi)
 
 
