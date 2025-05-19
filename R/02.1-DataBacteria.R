@@ -2,42 +2,42 @@
 
 # Upload phylloseq
 
-bacteria<-qza_to_phyloseq(features = "TableDADA2Bacteria.qza",tree="RootedTreeBacteria.qza",taxonomy = "TaxonomyBacteria.qza")
-metadata_bacteria <- read_excel("metadata_bacteria.xlsx")
-View(metadata_bacteria)
+bacterias<-qza_to_phyloseq(features = "TablaDADA2Bacterias.qza",tree="ArbolRootedBacterias.qza",taxonomy = "TaxonomiaBacterias.qza")
+metadatos_bacterias <- read_excel("metadatos_bacterias_completos.xlsx")
+View(metadatos_bacterias)
 
 
 # Data format
-metadata_bacteria<-as.data.frame(metadata_bacteria)
-colnames(metadata_bacteria)[1]<-"id"
-rownames(metadata_bacteria)<-metadata_bacteria$id
+metadatos_bacterias<-as.data.frame(metadatos_bacterias)
+colnames(metadatos_bacterias)[1]<-"id"
+rownames(metadatos_bacterias)<-metadatos_bacterias$id
 
-metadata_bacteria$Plot<-as.character(metadata_bacteria$Plot)
-metadata_bacteria$Elevation<-as.character(metadata_bacteria$Elevation)
+metadatos_bacterias$Parcela<-as.character(metadatos_bacterias$Parcela)
+metadatos_bacterias$Altitud<-as.character(metadatos_bacterias$Altitud)
 
-metadata_bacteria<-metadata_bacteria[,-c(5:7,9,21:25)]
-metadata_bacteria<-subset(metadata_bacteria,ID_individual!="Control")
-# Missing data replace by predicted data
+metadatos_bacterias<-metadatos_bacterias[,-c(5:7,9,21:25)]
 
-metadata_bacteria[3,25]<-10
-metadata_bacteria[22,25]<-9
-mode(metadata_bacteria$MO)<-"numeric"
+# Missing data replace by predicted data and variables name change
+metadatos_bacterias[3,25]<-10
+colnames(metadatos_bacterias)[25]<-"MO"
+metadatos_bacterias[22,25]<-9
+colnames(metadatos_bacterias)[35]<-"NO3"
+colnames(metadatos_bacterias)[36]<-"NH4"
 
-# Deleting data for missing sequences (Bacterial phyllosphere for 2018 plot)
-
-metadata_bacteria<-subset(metadata_bacteria,id!="BF5A")
-metadata_bacteria<-subset(metadata_bacteria,id!="BF5C")
-sample_data(bacteria)<-metadata_bacteria
+metadatos_bacterias<-subset(metadatos_bacterias,id!="BF5A")
+metadatos_bacterias<-subset(metadatos_bacterias,id!="BF5C")
+sample_data(bacterias)<-metadatos_bacterias
 
 
 # R objects for ASV table and taxonomy
 
-ASV_bacteria<-as.data.frame(otu_table(bacteria))
-taxonomy_bacteria<-as.data.frame(tax_table(bacteria))
+ASV_bacterias<-as.data.frame(otu_table(bacterias))
+taxonomy_bacterias<-as.data.frame(tax_table(bacterias))
 
 
-# Subset without control samples and missing sequences
+# Subset without control samples
 
-bacteria_ok<-subset_samples(bacteria,ID_individual!="Control")
+bacterias_bien<-subset_samples(bacterias,ID_individuo!="Control")
 
-sample_names(bacteria_ok)
+bacterias_bien<-subset_samples(bacterias,id!="BF5A")
+bacterias_bien<-subset_samples(bacterias,id!="BF5C")
