@@ -29,6 +29,19 @@ colnames(rda_bacteria_phyllo@sam_data)[20]<-"Light"
 colnames(rda_bacteria_phyllo@sam_data)[22]<-"RH"
 colnames(rda_bacteria_phyllo@sam_data)[24]<-"EC"
 
+rda_bacterias_filo@tax_table[rda_bacterias_filo@tax_table=="Acidobacteriae"]<-"Terriglobia"
+rda_bacterias_filo@tax_table[rda_bacterias_filo@tax_table=="Actinomycetia"]<-"Actinomycetes"
+rda_bacterias_filo@tax_table[rda_bacterias_filo@tax_table=="Eremiobacteria"]<-"Vulcanimicrobiia"
+rda_bacterias_filo@tax_table[rda_bacterias_filo@tax_table=="Polyangia_463783"]<-"Polyangiia"
+rda_bacterias_filo@tax_table[rda_bacterias_filo@tax_table=="Acidimicrobiia_401430"]<-"Acidimicrobiia"
+rda_bacterias_filo@tax_table[rda_bacterias_filo@tax_table=="Verrucomicrobiae"]<-"Verrucomicrobiia"
+
+clases_rda_bacterias$Class[clases_rda_bacterias$Class=="Acidobacteriae"]<-"Terriglobia"
+clases_rda_bacterias$Class[clases_rda_bacterias$Class=="Actinomycetia"]<-"Actinomycetes"
+clases_rda_bacterias$Class[clases_rda_bacterias$Class=="Eremiobacteria"]<-"Vulcanimicrobiia"
+clases_rda_bacterias$Class[clases_rda_bacterias$Class=="Polyangia_463783"]<-"Polyangiia"
+clases_rda_bacterias$Class[clases_rda_bacterias$Class=="Acidimicrobiia_401430"]<-"Acidimicrobiia"
+clases_rda_bacterias$Class[clases_rda_bacterias$Class=="Verrucomicrobiae"]<-"Verrucomicrobiia"
 #Plot
 
 rda_bacteria_phyllo_plot<-rda_bacteria_phyllo %>%
@@ -77,6 +90,12 @@ colnames(rda_bacteria_rhizo@sam_data)[20]<-"Light"
 colnames(rda_bacteria_rhizo@sam_data)[22]<-"RH"
 colnames(rda_bacteria_rhizo@sam_data)[24]<-"EC"
 
+rda_bacterias_rizo@tax_table[rda_bacterias_rizo@tax_table=="Acidobacteriae"]<-"Terriglobia"
+rda_bacterias_rizo@tax_table[rda_bacterias_rizo@tax_table=="Actinomycetia"]<-"Actinomycetes"
+rda_bacterias_rizo@tax_table[rda_bacterias_rizo@tax_table=="Eremiobacteria"]<-"Vulcanimicrobiia"
+rda_bacterias_rizo@tax_table[rda_bacterias_rizo@tax_table=="Polyangia_463783"]<-"Polyangiia"
+rda_bacterias_rizo@tax_table[rda_bacterias_rizo@tax_table=="Acidimicrobiia_401430"]<-"Acidimicrobiia"
+rda_bacterias_rizo@tax_table[rda_bacterias_rizo@tax_table=="Verrucomicrobiae"]<-"Verrucomicrobiia"
 #Plot
 
 rda_bacteria_rhizo_plot<-rda_bacteria_rhizo %>%
