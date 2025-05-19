@@ -53,7 +53,3 @@ ggplot(data=rarefacion_bact_suelo,aes(x=Sample,y=Species,col=Site))+
   theme(legend.position = "none")+
   xlab("Sequencing depth")+ylab("ASV number")+
   scale_color_manual(values = moma.colors("Warhol",35)
-
-# Delete unuselful vectors
-rm(sample_bacteria)
-rm(plot_bacteria)
