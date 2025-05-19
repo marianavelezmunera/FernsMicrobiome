@@ -1,41 +1,42 @@
 # Data 
 
-# Upload phyloseq from QIIME2 artifact
+# Upload phylloseq
 
-fungi<-qza_to_phyloseq(features = "TableDADA2Fungi.qza",
-                        tree="RootedTreeFungi.qza",taxonomy = "TaxonomyFungi.qza")
-metadata_fungi <- read_excel("metadata_fungi.xlsx")
+hongos<-qza_to_phyloseq(features = "TablaDADA2HongosForward.qza",
+                        tree="ArbolRootedHongos.qza",taxonomy = "TaxonomiaHongos.qza")
+metadatos_hongos <- read_delim("metadatos_hongos.txt", 
+                               delim = "\t", escape_double = FALSE, 
+                               trim_ws = TRUE)
+
 # Data format
+metadatos_hongos<-as.data.frame(metadatos_hongos)
+rownames(metadatos_hongos)<-metadatos_hongos$id
 
-metadata_fungi<-as.data.frame(metadata_fungi)
-colnames(metadata_fungi)[1]<-"id"
-rownames(metadata_fungi)<-metadata_fungi$id
-
-metadata_fungi$Plot<-as.character(metadata_fungi$Plot)
-metadata_fungi$Elevation<-as.character(metadata_fungi$Elevation)
-metadata_fungi<-metadata_fungi[,-c(5:7,9,21:25)]
+metadatos_hongos$Parcela<-as.character(metadatos_hongos$Parcela)
+metadatos_hongos$Altitud<-as.character(metadatos_hongos$Altitud)
 
 # Missing data replace by predicted data and variables name change
-metadata_fungi[3,25]<-10
-colnames(metadata_fungi)[25]<-"MO"
-metadata_fungi[22,25]<-9
-colnames(metadata_fungi)[35]<-"NO3"
-colnames(metadata_fungi)[36]<-"NH4"
-metadata_fungi<-subset(metadata_fungi,ID_individual!="Control")
-metadata_fungi<-subset(metadata_fungi,id!="HR4B")
-sample_data(fungi)<-metadata_fungi
+metadatos_hongos[3,25]<-10
+colnames(metadatos_hongos)[25]<-"MO"
+metadatos_hongos[22,25]<-9
+colnames(metadatos_hongos)[35]<-"NO3"
+colnames(metadatos_hongos)[36]<-"NH4"
+sample_data(hongos)<-metadatos_hongos
 
 # R objects for ASV table and taxonomy
 
-ASV_fungi<-as.data.frame(otu_table(fungi))
-taxonomy_fungi<-as.data.frame(tax_table(fungi))
+ASV_hongos<-as.data.frame(otu_table(hongos))
+taxonomy_hongos<-as.data.frame(tax_table(hongos))
 
 # Filters
 unique(taxonomy$Phylum)
 unique(taxonomy$Kingdom)
 
+# Replace "Fungi_phy_Incertae_sedis" for NA
+
+hongos@tax_table[hongos@tax_table=="Fungi_phy_Incertae_sedis"]<-NA
+
 
 # Subset without control samples
 
-fungi_ok<-subset_samples(fungi,ID_individual!="Control")
-sample_names(fungi_ok)
+hongos_bien<-subset_samples(hongos,ID_individuo!="Control")
