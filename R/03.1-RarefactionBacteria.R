@@ -16,53 +16,43 @@ ggplot(data=rarefaction_bacteria,aes(x=Sample,y=Species,col=Site))+
 
 # Plot for each site
 
-unique(rarefaction_bacteria$Site)
+# Plot for sample type
 
-nrow(subset(rarefaction_bacteria,Site=="BF1A"))+ nrow(subset(rarefaction_bacteria,Site=="BF1B"))+nrow(subset(rarefaction_bacteria,Site=="BF1C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BF2A"))+nrow(subset(rarefaction_bacteria,Site=="BF2B"))+nrow(subset(rarefaction_bacteria,Site=="BF2C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BF3A"))+nrow(subset(rarefaction_bacteria,Site=="BF3B"))+nrow(subset(rarefaction_bacteria,Site=="BF3C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BF4A"))+nrow(subset(rarefaction_bacteria,Site=="BF4B"))+nrow(subset(rarefaction_bacteria,Site=="BF4C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BF5A"))+nrow(subset(rarefaction_bacteria,Site=="BF5B"))+nrow(subset(rarefaction_bacteria,Site=="BF5C"))
+rarefaccion_bacterias1<-rarefaccion_bacterias %>% mutate(muestra=case_when(grepl("^BF",Site)~"Phyllosphere",grepl("^BR",Site)~"Rhizosphere",grepl("^BS",Site)~"Soil"))
 
-nrow(subset(rarefaction_bacteria,Site=="BR1A"))+nrow(subset(rarefaction_bacteria,Site=="BR1B"))+nrow(subset(rarefaction_bacteria,Site=="BR1C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BR2A"))+nrow(subset(rarefaction_bacteria,Site=="BR2B"))+nrow(subset(rarefaction_bacteria,Site=="BR2C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BR3A"))+nrow(subset(rarefaction_bacteria,Site=="BR3B"))+nrow(subset(rarefaction_bacteria,Site=="BR3C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BR4A"))+nrow(subset(rarefaction_bacteria,Site=="BR4B"))+nrow(subset(rarefaction_bacteria,Site=="BR4C"))+
-  nrow(subset(rarefaction_bacteria,Site=="BR5A"))+nrow(subset(rarefaction_bacteria,Site=="BR5B"))+nrow(subset(rarefaction_bacteria,Site=="BR5C"))
+rarefacion_bact_filo<-subset(rarefaccion_bacterias1,muestra=="Phyllosphere")
+rarefacion_bact_rizo<-subset(rarefaccion_bacterias1,muestra=="Rhizosphere")
+rarefacion_bact_suelo<-subset(rarefaccion_bacterias1,muestra=="Soil")
 
-nrow(subset(rarefaction_bacteria,Site=="BS1"))+
-  nrow(subset(rarefaction_bacteria,Site=="BS2"))+
-  nrow(subset(rarefaction_bacteria,Site=="BS3"))+
-  nrow(subset(rarefaction_bacteria,Site=="BS4"))+
-  nrow(subset(rarefaction_bacteria,Site=="BS5"))
-
-plot_bacteria<-c(rep("2210",848),rep("1978",1495),rep("2178",1031),rep("2007",1087),rep("2018",283),rep("2210",5343),rep("1978",7444),rep("2178",5881),rep("2007",6424),rep("2018",6287),rep("2210",2049),rep("1978",2199),rep("2178",2100),rep("2007",2294),rep("2018",1851))
-
-rarefaction_bacteria$plot<-plot_bacteria
-
-sample_bacteria<-c(rep("Phyllo",4744),rep("Rhizo",31379),rep("Soil",10493))
-
-rarefaction_bacteria$sample<-sample_bacteria
-rarefaction_bacteria$plot<-as.factor(rarefaction_bacteria$plot)
-
-
-ggplot(data=rarefaction_bacteria,aes(x=Sample,y=Species,col=Site))+
-  geom_line(aes(linetype=sample))+
-  theme_biome_utils()+
-  theme(legend.position = "none")+
-  xlab("Sequencing depth")+ylab("ASV number")+
-  facet_wrap(~plot)+
-  scale_color_manual(values = moma.colors("Warhol",35))
-
-# By sample type 
-
-ggplot(data=rarefaction_bacteria,aes(x=Sample,y=Species,col=Site))+
+rare_bact_filo_plot<-ggplot(data=rarefacion_bact_filo,aes(x=Sample,y=Species,col=Site))+
   geom_line()+
   theme_biome_utils()+
   theme(legend.position = "none")+
   xlab("Sequencing depth")+ylab("ASV number")+
-  facet_wrap(~sample)+
-  scale_color_manual(values = moma.colors("Warhol",35))
+  scale_color_manual(values = moma.colors("Warhol",35))+
+  geom_text(data=. %>% arrange(desc(Sample)) %>%
+              group_by(Site) %>%
+              slice(1),aes(label=Site),position=position_nudge(0.5), hjust=0, show.legend=FALSE,size=3)+
+  ggtitle("a. Bacterial phyllosphere")
+
+
+rare_bact_rizo_plot<-ggplot(data=rarefacion_bact_rizo,aes(x=Sample,y=Species,col=Site))+
+  geom_line()+
+  theme_biome_utils()+
+  theme(legend.position = "none")+
+  xlab("Sequencing depth")+ylab("ASV number")+
+  scale_color_manual(values = moma.colors("Warhol",35))+
+  geom_text(data=. %>% arrange(desc(Sample)) %>%
+              group_by(Site) %>%
+              slice(1),aes(label=Site),position=position_nudge(0.5), hjust=0, show.legend=FALSE,size = 3)+
+  ggtitle("b. Bacterial rhizosphere")
+
+ggplot(data=rarefacion_bact_suelo,aes(x=Sample,y=Species,col=Site))+
+  geom_line()+
+  theme_biome_utils()+
+  theme(legend.position = "none")+
+  xlab("Sequencing depth")+ylab("ASV number")+
+  scale_color_manual(values = moma.colors("Warhol",35)
 
 # Delete unuselful vectors
 rm(sample_bacteria)
