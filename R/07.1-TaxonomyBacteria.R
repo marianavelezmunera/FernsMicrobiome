@@ -15,12 +15,16 @@ total_bacteria<-microbiome::transform(aggregate_top_taxa2(subset_taxa(bacteria_r
 
 # Plot
 
-total_bacteria@sam_data$label<-c("2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018","2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018","2018","2018","2210","1978","2178","2007","2018") #Labels for the plot
+total_bacteria@sam_data$label<-c("2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018",
+                                 "2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018","2018",
+                                 "2018","2210","1978","2178","2007","2018") #Labels for the plot
 
 bacteria_taxonomy_plot<-plot_composition(total_bacteria,group_by = "Sample_type", sample.sort = "Elevation",x.label = "label")+
   theme_biome_utils()+
   theme(legend.position = "right")+
-  scale_fill_manual(name="Class",values=moma.colors("Warhol",21))+
+  scale_fill_manual(name="Class",values=moma.colors("Warhol",21),labels=c("Acidimicrobiia","Terriglobia","Actinomycetes","Alphaproteobacteria",
+                                                                          "Bacteroidia","Vulcanimicrobiia","Gammaproteobacteria","Other",
+                                                                          "Planctomycetia","Polyangiia","Verrucomicrobiia"))+
   ylab("Relative abundance")+
   xlab("Sample")+
   theme(axis.text = element_text(angle = 90))+
