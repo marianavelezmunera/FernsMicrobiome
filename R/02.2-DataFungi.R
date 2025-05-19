@@ -36,7 +36,6 @@ unique(taxonomy$Kingdom)
 
 hongos@tax_table[hongos@tax_table=="Fungi_phy_Incertae_sedis"]<-NA
 
-
 # Subset without control samples
 
 hongos_bien<-subset_samples(hongos,ID_individuo!="Control")
