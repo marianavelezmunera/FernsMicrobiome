@@ -34,7 +34,6 @@ sample_data(bacterias)<-metadatos_bacterias
 ASV_bacterias<-as.data.frame(otu_table(bacterias))
 taxonomy_bacterias<-as.data.frame(tax_table(bacterias))
 
-
 # Subset without control samples
 
 bacterias_bien<-subset_samples(bacterias,ID_individuo!="Control")
