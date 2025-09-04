@@ -1,0 +1,62 @@
+# Linnear models 
+
+# Diversity ~ Elevation + body size
+
+# Bacteria 
+# Phyllosphere
+lm_bacterias_filosfera1<-lm(diversity_shannon~as.numeric(as.factor(Altitud))+body_size,data=subset(bodysize_bacterias,Tipo_muestra=="Filosfera"))
+summary(lm_bacterias_filosfera1)
+lm_bacterias_filosfera
+
+# Rhizosphere
+lm_bacterias_rizosfera1<-lm(diversity_shannon~as.numeric(as.factor(Altitud))+body_size,data=subset(bodysize_bacterias,Tipo_muestra=="Rizosfera"))
+summary(lm_bacterias_rizosfera1)
+lm_bacterias_rizosfera
+
+# Fungi 
+# Phyllosphere
+lm_hongos_filosfera1<-lm(diversity_shannon~as.numeric(as.factor(Altitud))+body_size,data=subset(bodysize_hongos,Tipo_muestra=="Filosfera"))
+summary(lm_hongos_filosfera1)
+
+# Rhizosphere
+lm_hongos_rizosfera1<-lm(diversity_shannon~as.numeric(as.factor(Altitud))+body_size,data=subset(bodysize_hongos,Tipo_muestra=="Rizosfera"))
+summary(lm_hongos_rizosfera1)
+lm_hongos_rizosfera
+
+# Diversity ~ Elevation + body size + sample type
+# Data
+bodysize_bacterias<-diversidad_alfa_bacterias[,c(1:5,10)]
+bodysize_bacterias<-left_join(bodysize_bacterias,metadatos_bacterias[,c(1,11,12,15,38)],by="id")
+
+bodysize_hongos<-diversidad_alfa_hongos[,c(1:5,10)]
+bodysize_hongos<-left_join(bodysize_hongos,metadatos_hongos[,c(1,11,12,15,38)],by="id")
+
+# Bacteria
+bodysize_bacterias_lm<-lm(diversity_shannon ~ as.numeric(as.factor(Altitud)) + body_size+Tipo_muestra,data = bodysize_bacterias)
+summary(bodysize_bacterias_lm)
+
+# Fungi
+bodysize_hongos_lm<-lm(diversity_shannon ~ as.numeric(as.factor(Altitud)) + body_size+Tipo_muestra,data = bodysize_hongos)
+summary(bodysize_hongos_lm)
+
+# Diversity ~ Elevation + Plant height
+# Bacteria 
+# Phyllosphere
+summary(lm(diversity_shannon ~ as.numeric(as.factor(Altitud)) + Altura,data = subset(bodysize_bacterias,Tipo_muestra=="Filosfera")))
+# Rhizosphere
+summary(lm(diversity_shannon ~ as.numeric(as.factor(Altitud)) + Altura,data = subset(bodysize_bacterias,Tipo_muestra=="Rizosfera")))
+
+# Fungi
+# Phyllosphere
+summary(lm(diversity_shannon ~ as.numeric(as.factor(Altitud)) + Altura,data = subset(bodysize_hongos,Tipo_muestra=="Filosfera")))
+# Rhizosphere
+summary(lm(diversity_shannon ~ as.numeric(as.factor(Altitud)) + Altura,data = subset(bodysize_hongos,Tipo_muestra=="Rizosfera")))
+
+# Body size ~ Elevation
+#Bacteria
+summary(aov(body_size~Altitud,data = bodysize_bacterias))
+summary(lm(body_size~as.numeric(as.factor(Altitud)),data=bodysize_bacterias))
+
+# Fungi
+summary(aov(body_size~Altitud,data=bodysize_hongos))
+summary(lm(body_size~as.numeric(as.factor(Altitud)),data = bodysize_hongos))
