@@ -1,0 +1,376 @@
+# Figures
+# Colors for all figures
+colores<-c(moma.colors("Warhol",25)[15],moma.colors("Warhol",25)[13],moma.colors("Warhol",25)[19],moma.colors("Warhol",25)[18],moma.colors("Warhol",25)[21])
+colores
+
+# Alpha diversity vs Elevation 
+# Bacteria
+# Phyllosphere
+shannon_bacterias_filo<-ggplot(data = subset(diversidad_alfa_bacterias,Tipo_muestra=="Filosfera"),aes(x=Altitud, y=diversity_shannon,fill=Altitud))+
+  geom_point(aes(fill=Altitud),shape=21,size=6,colour="black")+
+  theme_biome_utils()+
+  xlab("Elevation (masl)")+ylab("Shannon Index (H)") +
+  theme(legend.position = "none")+
+  scale_fill_manual(values=colores)+
+  geom_abline(intercept =4.96658,slope = -0.10095)+
+  ggtitle("a.Bacterial phyllosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(axis.text = element_text(size=18))+
+  ylim(4,7.5)
+shannon_bacterias_filo
+# Rhizosphere
+shannon_bacterias_rizo<-ggplot(data = subset(diversidad_alfa_bacterias,Tipo_muestra=="Rizosfera"),aes(x=Altitud, y=diversity_shannon,fill=Altitud))+
+  geom_point(aes(fill=Altitud),shape=21,size=6,colour="black")+
+  theme_biome_utils()+
+  xlab("Elevation (masl)")+ylab("Shannon Index (H)") +
+  theme(legend.position = "none")+
+  scale_fill_manual(values=colores)+
+  geom_abline(intercept =7.14814,slope = -0.06647)+
+  ggtitle("b. Bacterial rhizosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(axis.text = element_text(size=18))+
+  ylim(4,7.5)
+# Fungi
+# Phyllosphere
+shannon_hongos_filo<-ggplot(data = subset(diversidad_alfa_hongos,Tipo_muestra=="Filosfera"),aes(x=Altitud, y=diversity_shannon,group=Altitud))+
+  geom_point(aes(fill=Altitud),shape=21,size=6,colour="black")+
+  theme_biome_utils()+
+  xlab("Elevation (masl)")+ylab("Shannon Index (H)") +
+  theme(legend.position = "none")+
+  scale_fill_manual(values=colores)+
+  geom_abline(intercept =5.322642,slope = -0.002603)+
+  ggtitle("c. Fungal phyllosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(axis.text = element_text(size=18))+
+  ylim(4,6)
+# Rhizosphere
+shannon_hongos_rizo<-ggplot(data = subset(diversidad_alfa_hongos,Tipo_muestra=="Rizosfera"),aes(x=Altitud, y=diversity_shannon,fill=Altitud))+
+  geom_point(aes(fill=Altitud),shape=21,size=6,colour="black")+
+  theme_biome_utils()+
+  xlab("Elevation (masl)")+ylab("Shannon Index (H)") +
+  theme(legend.position = "none")+
+  scale_fill_manual(values=colores)+
+  geom_abline(intercept =4.91582,slope = -0.04141)+
+  ggtitle("d. Fungal rhizosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(axis.text = element_text(size=18))+
+  ylim(4,6)
+
+shannon_bacterias_rizo
+
+# Final plot
+alpha_total<-shannon_bacterias_filo+shannon_bacterias_rizo+shannon_hongos_filo+shannon_hongos_rizo+
+  plot_layout(guides = "collect",axis_titles = "collect") & theme(legend.position = "none")
+alpha_total
+ggsave("PlotsPDF/alpha_total.pdf",alpha_total,width=14,height = 7)
+
+## Alpha diversity vs Body Size
+# Names
+names <- as_labeller(c(
+  'Filosfera'="Phyllosphere",
+  'Rizosfera'="Rhizosphere"))
+# Bacteria
+bs_alpha_bacterias<-ggplot(data = subset(bodysize_bacterias,Tipo_muestra!="Suelo"),aes(x=body_size,y=diversity_shannon))+
+  geom_point(aes(fill=Altitud),shape=21,size=6)+
+  facet_wrap(~Tipo_muestra,labeller=names)+
+  geom_smooth(method = "lm",color="black")+
+  scale_fill_manual(values=colores,name="Elevation")+
+  theme_biome_utils()+
+  ggtitle("a. Bacteria")+
+  ylab("H")+xlab("Body size")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(axis.text = element_text(size=18))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))+
+  theme(strip.text = element_text(
+    size = 14))
+# Fungi
+bs_alpha_hongos<-ggplot(data = subset(bodysize_hongos,Tipo_muestra!="Suelo"),aes(x=body_size,y=diversity_shannon))+
+  geom_point(aes(fill=Altitud),shape=21,size=6)+
+  facet_wrap(~Tipo_muestra,labeller=names)+
+  geom_smooth(method = "lm",color="black")+
+  scale_fill_manual(values=colores,name="Elevation")+
+  theme_biome_utils()+
+  ggtitle("b. Fungi")+
+  ylab("H")+xlab("Body size")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(axis.text = element_text(size=18))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))+
+  theme(strip.text = element_text(
+    size = 14))
+
+# Final plot
+shannon_bs<-bs_alpha_bacterias/bs_alpha_hongos+plot_layout(guides = "collect",axis_titles = "collect")
+ggsave("PlotsPDF/alpha_bodysize.pdf",shannon_bs,width=14,height = 7)
+
+# Beta diversity
+
+# Beta Weighted UniFrac
+
+# Bacteria
+
+# Phyllosphere
+plot_beta_bacterias_filo_wunifrac<-plot_ordination(bacterias_filosfera,pcoa_wunifrac_bacterias_filosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("a. Bacterial phyllosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+# Rhizosphere
+plot_beta_bacterias_rizo_wunifrac<-plot_ordination(bacterias_rizosfera,pcoa_wunifrac_bacterias_rizosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("b.Bacterial rhizosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+
+# Fungi
+
+# Phyllosphere
+plot_beta_hongos_filo_wunifrac<-plot_ordination(hongos_filosfera,pcoa_wunifrac_hongos_filosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("c.Fungal phyllosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+plot_beta_hongos_filo
+
+# Rhizosphere
+plot_beta_hongos_rizo_wunifrac<-plot_ordination(hongos_rizosfera,pcoa_wunifrac_hongos_rizosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("d. Fungal rhizosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+
+# Final plot
+beta_total_wunifrac<-plot_beta_bacterias_filo_wunifrac+plot_beta_bacterias_rizo_wunifrac+plot_beta_hongos_filo_wunifrac+plot_beta_hongos_rizo_wunifrac+
+  plot_layout(guides = "collect")
+beta_total_wunifrac
+ggsave("PlotsPDF/wunifrac.pdf",beta_total_wunifrac,width=14,height = 7)
+
+# Beta UniFrac
+
+# Bacteria
+
+# Phyllosphere
+plot_beta_bacterias_filo<-plot_ordination(bacterias_filosfera,pcoa_unifrac_bacterias_filosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("a. Bacterial phyllosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+# Rhizosphere
+plot_beta_bacterias_rizo<-plot_ordination(bacterias_rizosfera,pcoa_unifrac_bacterias_rizosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("b.Bacterial rhizosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+
+# Fungi
+# Phyllosphere
+plot_beta_hongos_filo<-plot_ordination(hongos_filosfera,pcoa_unifrac_hongos_filosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("c.Fungal phyllosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+# Rhizosphere
+plot_beta_hongos_rizo<-plot_ordination(hongos_rizosfera,pcoa_unifrac_hongos_rizosfera,color="Altitud")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_color_manual(name="Elevation",values=colores)+
+  ggtitle("d. Fungal rhizosphere")+
+  geom_point(size=6)+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=18))+
+  theme(legend.text = element_text(size=18))
+
+# Final plot
+
+beta_total<-plot_beta_bacterias_filo+plot_beta_bacterias_rizo+plot_beta_hongos_filo+plot_beta_hongos_rizo+
+  plot_layout(guides = "collect")
+beta_total
+ggsave("PlotsPDF/unifrac.pdf",beta_total,width=14,height = 7)
+
+# Taxonomy
+
+# Bacteria
+# Labels
+total_bacterias@sam_data$label<-c("2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018","2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018","2018","2018","2210","1978","2178","2007","2018")
+
+# Plot
+bacteria_taxonomy_plot<-plot_composition(total_bacterias,group_by = "Tipo_muestra", sample.sort = "Altitud",x.label = "label")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_fill_manual(name="Class",values=moma.colors("Warhol",21))+
+  ylab("Relative abundance")+
+  xlab("Sample")+
+  theme(axis.text = element_text(angle = 90))+
+  theme(strip.text = element_text(size = 14))+
+  theme(axis.title = element_text(size=14))+
+  theme(legend.title = element_text(size=12))+
+  theme(legend.text = element_text(size=12))+
+  ggtitle("a. Bacteria")+
+  theme(plot.title = element_text(size=14))+
+  geom_bar(stat = "identity",color="black")
+  
+# Fungi
+# Labels
+
+total_hongos@sam_data$label<-c("2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2007","2018","2018","2018","2210","2210","2210","1978","1978","1978","2178","2178","2178","2007","2007","2018","2018","2018","2210","1978","2178","2007","2018")
+
+# Plot
+hongos_taxonomy_plot<-plot_composition(total_hongos,group_by = "Tipo_muestra",sample.sort = "Altitud",x.label = "label")+
+  theme_biome_utils()+
+  theme(legend.position = "right")+
+  scale_fill_manual(name="Class",values=moma.colors("Warhol",11))+
+  ylab("Relative abundance")+
+  xlab("Sample")+
+  theme(axis.text = element_text(angle = 90))+
+  theme(strip.text = element_text(
+    size = 14))+
+  theme(axis.title = element_text(size=14))+
+  theme(legend.title = element_text(size=12))+
+  theme(legend.text = element_text(size=12))+
+  ggtitle("b. Fungi")+
+  theme(plot.title = element_text(size=14))+
+  geom_bar(stat = "identity",color="black")
+
+
+# Final plot
+taxonomy_plot<-bacteria_taxonomy_plot/hongos_taxonomy_plot+
+  plot_layout(axis_titles = "collect")
+taxonomy_plot
+ggsave(taxonomy.png",taxonomy_plot,width=10.5,height = 10.5)
+
+# Environment plot
+
+ambiente
+ggsave("PlotsPDF/ambiente.pdf",ambiente,width = 14,height = 7)
+
+# RDA
+# Bacteria
+# Phyllosphere
+rda_bacterias_filo_data_plot<-rda_bacterias_filo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_bacterias_filo@sam_data)[c(18,20,22,37,38)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_plot(shape=21,fill="Altitud",plot_taxa = clases_rda_bacterias[c(10,1,6,5,7),1],size=4,
+           constraint_lab_style = constraint_lab_style(size = 5,type = "text"),constraint_vec_length = 4,tax_vec_length = 4,auto_caption = NA,
+           tax_lab_style = tax_lab_style(size = 4.5,type = "text"))+
+  scale_fill_manual(name="Elevation",values=colores)+
+  theme_biome_utils()+
+  ggtitle("a. Bacterial phyllosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=16))+
+  theme(legend.text = element_text(size=14))
+
+# Rhizosphere
+  rda_bacterias_rizo_data_plot<-rda_bacterias_rizo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_bacterias_rizo@sam_data)[c(23,22,28)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_plot(shape=21,fill="Altitud",plot_taxa = clases_rda_bacterias[c(10,1,6,5,7),1],size=4,
+           constraint_lab_style = constraint_lab_style(size = 5,type = "text"),constraint_vec_length = 4,tax_vec_length = 4,auto_caption = NA,
+           tax_lab_style = tax_lab_style(size = 4.5,type = "text"))+
+  scale_fill_manual(name="Elevation",values=colores)+
+  theme_biome_utils()+
+  ggtitle("b. Bacterial rizhosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=16))+
+  theme(legend.text = element_text(size=14))
+
+# Fungi 
+# Phyllosphere
+
+rda_hongos_filo_data_plot<-rda_hongos_bodysize_filo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_hongos_bodysize_filo@sam_data)[c(18,20,22,37,38)],method = "RDA",
+    scale_cc = FALSE)%>%
+  ord_plot(shape=21,fill="Altitud",plot_taxa = clases_rda_hongos[c(10,1,6,5,7),1],size=4,
+           constraint_lab_style = constraint_lab_style(size = 5,type = "text"),constraint_vec_length = 4,tax_vec_length = 4,auto_caption = NA,
+           tax_lab_style = tax_lab_style(size = 4.5,type = "text"))+
+  scale_fill_manual(name="Elevation",values=colores)+
+  theme_biome_utils()+
+  ggtitle("c. Fungal phyllosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=16))+
+  theme(legend.text = element_text(size=14))
+
+# Rhizosphere
+
+  rda_hongos_rizo_data_plot<-rda_hongos_rizo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_hongos_rizo@sam_data)[c(23,22,28)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_plot(shape=21,fill="Altitud",plot_taxa = clases_rda_hongos[c(10,1,6,5,7),1],size=4,
+           constraint_lab_style = constraint_lab_style(size = 5,type = "text"),constraint_vec_length = 4,tax_vec_length = 4,auto_caption = NA,
+           tax_lab_style = tax_lab_style(size = 4.5,type = "text"))+
+  scale_fill_manual(name="Elevation",values=colores)+
+  theme_biome_utils()+
+  ggtitle("d. Fungal rhizosphere")+
+  theme(plot.title = element_text(size=20))+
+  theme(axis.title = element_text(size=20))+
+  theme(legend.title = element_text(size=16))+
+  theme(legend.text = element_text(size=14))
+
+# Final plot
+
+rda_total<-(rda_bacterias_filo_data_plot+rda_bacterias_rizo_data_plot)/(rda_hongos_filo_data_plot+rda_hongos_rizo_data_plot)
+ggsave("PlotsPDF/rda.pdf",rda_total,width=14,height = 7)
+# Core microbiome
+
+# Per elevation
+core_plot<-venn_bacterias_filo_plot+venn_bacterias_rizo_plot+venn_hongos_filo_plot+venn_hongos_rizo_plot
+
+# Per sample
+core_persample<-venn_bacterias_genus_plot+venn_hongos_genus_plot
+core_persample
+
+ggsave("sample_core.svg",core_persample,device = "svg",width=15,height=9.5,units="in")
+ggsave("vector_core.svg",core_plot,device = "svg",width=15,height=9.5,units="in")
