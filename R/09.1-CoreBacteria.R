@@ -106,3 +106,67 @@ abundancias_bacterias_core<-abundancias_bacterias_core[,c(1:6,13)]
 abundancias_bacterias_core$total<-rowSums(abundancias_bacterias_core[2:6])
 abundancias_bacterias_core<-arrange(abundancias_bacterias_core,total)
 abundancias_bacterias_core1<-subset(abundancias_bacterias_core,Genus!="g__")
+
+# Relative abundances of core microbiome by sample type
+# Data
+core_sample_type_bacterias<-venn_bacterias_genus_datos$otu_table
+core_sample_type_bacterias$asv<-row.names(core_sample_type_bacterias)
+
+# Phyllosphere
+core_sample_type_bacterias_filo<-subset(core_sample_type_bacterias,Phyllosphere>0&Soil==0&Rhizosphere==0)
+core_sample_type_bacterias_filo<-core_sample_type_bacterias_filo[,c(1,4)]
+
+# Rhizosphere
+core_sample_type_bacterias_rizo<-subset(core_sample_type_bacterias,Phyllosphere==0&Soil==0&Rhizosphere>0)
+core_sample_type_bacterias_rizo<-core_sample_type_bacterias_rizo[,c(2,4)]
+
+# Abundances estimation
+
+# Phyllosphere
+# Data as compositional
+relativas_bacterias_filo<-microbiome::transform(bacterias_rare,"compositional")
+
+asv_bacterias_filosfera<-core_sample_type_bacterias_filo$asv
+
+
+otus_bacterias_filo_abundancias<-as.data.frame(relativas_bacterias_filo@otu_table)
+otus_bacterias_filo_abundancias$asv<-rownames(otus_bacterias_filo_abundancias)
+# Bacteria in core microbiome
+core_abundancias_bacterias_filo<-subset(otus_bacterias_filo_abundancias,asv %in% asv_bacterias_filosfera)
+core_abundancias_bacterias_filo<-core_abundancias_bacterias_filo[,c(1:13)]
+# Bacteria NOT in core microbiome
+core_resto_bacterias_filo<-otus_bacterias_filo_abundancias[!(otus_bacterias_filo_abundancias$asv %in% asv_bacterias_filosfera),]
+core_resto_bacterias_filo<-core_resto_bacterias_filo[,c(1:13)]
+
+# Data table joining both core and non-core
+core_abundancias_full_bacterias_filo<-bind_rows(colSums(core_abundancias_bacterias_filo),colSums(core_resto_bacterias_filo))
+rownames(core_abundancias_full_bacterias_filo)[1]<-"core"
+rownames(core_abundancias_full_bacterias_filo)[2]<-"no_core"
+
+colSums(core_abundancias_full_bacterias_filo) # Checking proportions sum 1
+summary(t(core_abundancias_full_bacterias_filo) # Max and min abundances of the core microbiome
+
+# Rhizosphere
+# Data as compositional
+relativas_bacterias_rizo<-microbiome::transform(bacterias_rare,"compositional")
+
+asv_bacterias_rizosfera<-core_sample_type_bacterias_rizo$asv
+
+otus_bacterias_rizo_abundancias<-as.data.frame(relativas_bacterias_rizo@otu_table)
+otus_bacterias_rizo_abundancias$asv<-rownames(otus_bacterias_rizo_abundancias)
+# Bacteria in core microbiome
+core_abundancias_bacterias_rizo<-subset(otus_bacterias_rizo_abundancias,asv %in% asv_bacterias_rizosfera)
+core_abundancias_bacterias_rizo<-core_abundancias_bacterias_rizo[,c(14:28)]
+# Bacteria NOT in core microbiome
+core_resto_bacterias_rizo<-otus_bacterias_rizo_abundancias[!(otus_bacterias_rizo_abundancias$asv %in% asv_bacterias_rizosfera),]
+core_resto_bacterias_rizo<-core_resto_bacterias_rizo[,c(1:13)]
+
+# Data table joining both core and non-core
+core_abundancias_full_bacterias_rizo<-bind_rows(colSums(core_abundancias_bacterias_rizo),colSums(core_resto_bacterias_rizo))
+rownames(core_abundancias_full_bacterias_rizo)[1]<-"core"
+rownames(core_abundancias_full_bacterias_rizo)[2]<-"no_core"
+
+colSums(core_abundancias_full_bacterias_filo)  # Checking proportions sum 1
+summary(t(core_abundancias_full_bacterias_filo) # Max and min abundances of the core microbiome
+
+
