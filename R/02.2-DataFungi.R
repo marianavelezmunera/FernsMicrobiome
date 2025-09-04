@@ -21,20 +21,8 @@ colnames(metadatos_hongos)[25]<-"MO"
 metadatos_hongos[22,25]<-9
 colnames(metadatos_hongos)[35]<-"NO3"
 colnames(metadatos_hongos)[36]<-"NH4"
+metadatos_hongos$body_size<-log(metadatos_hongos$Altura)+log(metadatos_hongos$C_base)+log(metadatos_hongos$Long_hojaNS)
 sample_data(hongos)<-metadatos_hongos
-
-# R objects for ASV table and taxonomy
-
-ASV_hongos<-as.data.frame(otu_table(hongos))
-taxonomy_hongos<-as.data.frame(tax_table(hongos))
-
-# Filters
-unique(taxonomy$Phylum)
-unique(taxonomy$Kingdom)
-
-# Replace "Fungi_phy_Incertae_sedis" for NA
-
-hongos@tax_table[hongos@tax_table=="Fungi_phy_Incertae_sedis"]<-NA
 
 # Subset without control samples
 
