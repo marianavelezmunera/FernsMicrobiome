@@ -48,6 +48,7 @@ anova_shannon_bacterias<-aov(diversity_shannon~Tipo_muestra*Altitud,data = diver
 summary(anova_shannon_bacterias2)
 TukeyHSD(anova_shannon_bacterias)
 
+# Sample type ANOVA
 anova_shannon_bacterias2<-aov(diversity_shannon~Tipo_muestra,data = diversidad_alfa_bacterias)
 summary(anova_shannon_bacterias)
 TukeyHSD(anova_shannon_bacterias)
