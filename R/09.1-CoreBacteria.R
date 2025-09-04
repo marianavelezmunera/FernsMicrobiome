@@ -1,102 +1,108 @@
 # Core microbiome
 
-# Phyllosphere per elevation
+# Per elevation
+# Phyllosphere
 
-#Petal diagram
-bacteria_meco_phyllo<-phyloseq2meco(bacteria_phyllosphere)
-bacteria_meco_phyllo$tidy_dataset()
-venn_bacteria_phyllo_data<-bacteria_meco_phyllo$merge_taxa(taxa="Genus")
-venn_bacteria_phyllo_data<-venn_bacteria_phyllo_data$merge_samples(use_group = "Elevation")
-
-mode(venn_bacteria_phyllo_data$sample_table$SampleID)<-"numeric"
-
-venn_bacteria_phyllo_data$sample_table <- arrange(venn_bacteria_phyllo_data$sample_table, SampleID)
-
-venn_bacteria_phyllo_core<-trans_venn$new(venn_bacteria_phyllo_data,ratio = NULL)
-venn_bacteria_phyllo_plot<-venn_bacteria_phyllo_core$plot_venn(petal_plot = TRUE, petal_center_size = 50, petal_r = 1.5, petal_a = 3, petal_move_xy = 5, petal_color_center = moma.colors("Warhol",15)[4],petal_color = colores)
-
-# Shared ASV table
-
-shared_bacteria_phyllo<-venn_bacteria_phyllo_core$data_details$`1978&2007&2018&2178&2210` 
-
-venn_bacteria_phyllo_core$tax_table$asv<-rownames(venn_bacteria_phyllo_core$tax_table)
-identidad_bacteria_phyllo<-subset(venn_bacteria_phyllo_core$tax_table,asv%in%shared_bacteria_phyllo)
-
-otus_bacteria_phyllo_core<-venn_bacteria_phyllo_core$otu_table
-otus_bacteria_phyllo_core$asv<-rownames(otus_bacteria_phyllo_core)
-
-otus_bacteria_phyllo_core<-subset(otus_bacteria_phyllo_core,asv%in%shared_bacteria_phyllo)
-
-abundances_bacteria_phyllo_core<-merge(otus_bacteria_phyllo_core,venn_bacteria_phyllo_core$tax_table,by='row.names')
-
-View(abundances_bacteria_phyllo_core)
-
-abundances_bacteria_phyllo_core<-abundances_bacteria_phyllo_core[,c(1:6,13)]
-abundances_bacteria_phyllo_core$total<-rowSums(abundances_bacteria_phyllo_core[2:6])
-abundances_bacteria_phyllo_core<-arrange(abundances_bacteria_phyllo_core,total)
-abundances_bacteria_phyllo_core<-subset(abundances_bacteria_phyllo_core,Genus!="g__")
+bacterias_meco_filo<-phyloseq2meco(bacterias_filosfera)
+bacterias_meco_filo$tidy_dataset()
+venn_bacterias_filo_datos<-bacterias_meco_filo$merge_taxa(taxa="Genus")
+venn_bacterias_filo_datos<-venn_bacterias_filo_datos$merge_samples("Altitud")
+mode(venn_bacterias_filo_datos$sample_table$SampleID)<-"numeric"
+venn_bacterias_filo_datos$sample_table <- arrange(venn_bacterias_filo_datos$sample_table, SampleID)
+venn_bacterias_filo_core<-trans_venn$new(venn_bacterias_filo_datos,ratio = NULL)
 
 
-View(abundances_bacteria_phyllo_core)
+# Petal plot
+venn_bacterias_filo_plot<-venn_bacterias_filo_core$plot_venn(petal_plot = TRUE, petal_center_size = 50, petal_r = 1.5, petal_a = 3, petal_move_xy = 5, petal_color_center = moma.colors("Warhol",15)[4],petal_color = colores)
+venn_bacterias_filo_plot
 
-#Rhizosphere per elevation
+#Shared ASV between elevations
 
-bacteria_meco_rhizo<-phyloseq2meco(bacteria_rhizosphere)
-bacteria_meco_rhizo$tidy_dataset()
-venn_bacteria_rhizo_data<-bacteria_meco_rhizo$merge_taxa(taxa="Genus")
-venn_bacteria_rhizo_data<-venn_bacteria_rhizo_data$merge_samples(use_group = "Elevation")
-mode(venn_bacteria_rhizo_data$sample_table$SampleID)<-"numeric"
-venn_bacteria_rhizo_data$sample_table <- arrange(venn_bacteria_rhizo_data$sample_table, SampleID)
-venn_bacteria_rhizo_data
-venn_bacteria_rhizo_core<-trans_venn$new(venn_bacteria_rhizo_data,ratio = NULL)
+compartido_bacterias_filo<-venn_bacterias_filo_core$data_details$`1978&2007&2018&2178&2210` 
+
+venn_bacterias_filo_core$tax_table$asv<-rownames(venn_bacterias_filo_core$tax_table)
+identidad_bacterias_filo<-subset(venn_bacterias_filo_core$tax_table,asv%in%compartido_bacterias_filo)
+
+otus_bacterias_filo_core<-venn_bacterias_filo_core$otu_table
+otus_bacterias_filo_core$asv<-rownames(otus_bacterias_filo_core)
+
+otus_bacterias_filo_core<-subset(otus_bacterias_filo_core,asv%in%compartido_bacterias_filo)
+
+abundancias_bacterias_filo_core<-merge(otus_bacterias_filo_core,venn_bacterias_filo_core$tax_table,by='row.names')
+
+
+abundancias_bacterias_filo_core<-abundancias_bacterias_filo_core[,c(1:6,13)]
+abundancias_bacterias_filo_core$total<-rowSums(abundancias_bacterias_filo_core[2:6])
+abundancias_bacterias_filo_core<-arrange(abundancias_bacterias_filo_core,total)
+abundancias_bacterias_filo_core1<-subset(abundancias_bacterias_filo_core,Genus!="g__")
+
+# Rhizosphere
+
+bacterias_meco_rizo<-phyloseq2meco(bacterias_rizosfera)
+bacterias_meco_rizo$tidy_dataset()
+venn_bacterias_rizo_datos<-bacterias_meco_rizo$merge_taxa(taxa="Genus")
+venn_bacterias_rizo_datos<-venn_bacterias_rizo_datos$merge_samples("Altitud")
+mode(venn_bacterias_rizo_datos$sample_table$SampleID)<-"numeric"
+venn_bacterias_rizo_datos$sample_table <- arrange(venn_bacterias_rizo_datos$sample_table, SampleID)
+venn_bacterias_rizo_datos
+venn_bacterias_rizo_core<-trans_venn$new(venn_bacterias_rizo_datos,ratio = NULL)
 
 #Petal plot
 
-venn_bacteria_rhizo_plot<-venn_bacteria_rhizo_core$plot_venn(petal_plot = TRUE, petal_center_size = 50, petal_r = 1.5, petal_a = 3, petal_move_xy = 5, petal_color_center = moma.colors("Warhol",15)[4],petal_color = colores)
+venn_bacterias_rizo_plot<-venn_bacterias_rizo_core$plot_venn(petal_plot = TRUE, petal_center_size = 50, petal_r = 1.5, petal_a = 3, petal_move_xy = 5, petal_color_center = moma.colors("Warhol",15)[4],petal_color = colores)
+venn_bacterias_rizo_plot
 
+# ASV shared by elevation
+compartido_bacterias_rizo<-venn_bacterias_rizo_core$data_details$`1978&2007&2018&2178&2210` 
 
-shared_bacteria_rhizo<-venn_bacteria_rhizo_core$data_details$`1978&2007&2018&2178&2210` 
+venn_bacterias_rizo_core$tax_table$asv<-rownames(venn_bacterias_rizo_core$tax_table)
+identidad_bacterias_rizo<-subset(venn_bacterias_rizo_core$tax_table,asv%in%compartido_bacterias_rizo)
 
-venn_bacteria_rhizo_core$tax_table$asv<-rownames(venn_bacteria_rhizo_core$tax_table)
-identidad_bacteria_rhizo<-subset(venn_bacteria_rhizo_core$tax_table,asv%in%shared_bacteria_rhizo)
+otus_bacterias_rizo_core<-venn_bacterias_rizo_core$otu_table
+otus_bacterias_rizo_core$asv<-rownames(otus_bacterias_rizo_core)
 
-otus_bacteria_rhizo_core<-venn_bacteria_rhizo_core$otu_table
-otus_bacteria_rhizo_core$asv<-rownames(otus_bacteria_rhizo_core)
+otus_bacterias_rizo_core<-subset(otus_bacterias_rizo_core,asv%in%compartido_bacterias_rizo)
 
-otus_bacteria_rhizo_core<-subset(otus_bacteria_rhizo_core,asv%in%shared_bacteria_rhizo)
+abundancias_bacterias_rizo_core<-merge(otus_bacterias_rizo_core,venn_bacterias_rizo_core$tax_table,by='row.names')
 
-abundances_bacteria_rhizo_core<-merge(otus_bacteria_rhizo_core,venn_bacteria_rhizo_core$tax_table,by='row.names')
+View(abundancias_bacterias_filo_core1)
 
+abundancias_bacterias_rizo_core<-abundancias_bacterias_rizo_core[,c(1:6,13)]
+abundancias_bacterias_rizo_core$total<-rowSums(abundancias_bacterias_rizo_core[2:6])
+abundancias_bacterias_rizo_core<-arrange(abundancias_bacterias_rizo_core,total)
+abundancias_bacterias_rizo_core1<-subset(abundancias_bacterias_rizo_core,Genus!="g__")
 
-abundances_bacteria_rhizo_core<-abundances_bacteria_rhizo_core[,c(1:6,13)]
-abundances_bacteria_rhizo_core$total<-rowSums(abundances_bacteria_rhizo_core[2:6])
-abundances_bacteria_rhizo_core<-arrange(abundances_bacteria_rhizo_core,total)
-abundances_bacteria_rhizo_core<-subset(abundances_bacteria_rhizo_core,Genus!="g__")
+# Core by sample type
 
+bacterias_meco<-phyloseq2meco(bacterias_rare) #Meco object
 
-#Core by sample type
+venn_bacterias_genus_datos<-bacterias_meco$merge_taxa(taxa="Genus")
+venn_bacterias_genus_datos<-venn_bacterias_genus_datos$merge_samples("Tipo_muestra")
+venn_bacterias_genus<-trans_venn$new(venn_bacterias_genus_datos,ratio = NULL)
 
-bacteria_meco<-phyloseq2meco(bacteria_rare) 
+#Venn diagram 
 
-venn_bacteria_genus_data<-bacteria_meco$merge_taxa(taxa="Genus")
-venn_bacteria_genus_data<-venn_bacteria_genus_data$merge_samples(use_group = "Sample_type")
-venn_bacteria_genus<-trans_venn$new(venn_bacteria_genus_data,ratio = NULL)
-venn_bacteria_genus_plot<-venn_bacteria_genus$plot_venn(color_circle = c(colores[1],colores[3],colores[5]), linesize = 2)
-venn_bacteria_genus_plot
+venn_bacterias_genus_plot<-venn_bacterias_genus$plot_venn(color_circle = c(colores[1],colores[3],colores[5]))
+venn_bacterias_genus_plot
 
-# Table ASV shared by sample type
+#Shared ASV in every elevation
 
-otus_bacteria_core<-venn_bacteria_genus$otu_table
-otus_bacteria_core$asv<-rownames(otus_bacteria_core)
+compartido_elevation_bacterias<-venn_bacterias_genus$data_details$`Phyllosphere&Rhizosphere&Soil` 
+venn_bacterias_genus$tax_table$asv<-rownames(venn_bacterias_genus$tax_table)
 
-otus_bacteria_core<-subset(otus_bacteria_core,asv%in%shared_elevation_bacteria)
+# Core identity
+identidad_elevation_bacterias<-subset(venn_bacterias_genus$tax_table,asv%in%compartido_elevation_bacterias)
 
-abundances_bacteria_core<-merge(otus_bacteria_core,venn_bacteria_genus$tax_table,by='row.names')
+otus_bacterias_core<-venn_bacterias_genus$otu_table
+otus_bacterias_core$asv<-rownames(otus_bacterias_core)
 
-unique(abundances_bacteria_core$Genus)
+otus_bacterias_core<-subset(otus_bacterias_core,asv%in%compartido_elevation_bacterias)
 
-abundances_bacteria_core<-abundances_bacteria_core[,c(1:4,11)]
-abundances_bacteria_core$total<-rowSums(abundances_bacteria_core[2:4])
-abundances_bacteria_core<-arrange(abundances_bacteria_core,total)
-abundances_bacteria_core<-subset(abundances_bacteria_core,Genus!="g__")
-View(abundances_bacteria_core)
+abundancias_bacterias_core<-merge(otus_bacterias_core,venn_bacterias_genus$tax_table,by='row.names')
+
+unique(abundancias_bacterias_core$Genus)
+
+abundancias_bacterias_core<-abundancias_bacterias_core[,c(1:6,13)]
+abundancias_bacterias_core$total<-rowSums(abundancias_bacterias_core[2:6])
+abundancias_bacterias_core<-arrange(abundancias_bacterias_core,total)
+abundancias_bacterias_core1<-subset(abundancias_bacterias_core,Genus!="g__")
