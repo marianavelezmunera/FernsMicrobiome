@@ -2,7 +2,7 @@
 
 # Upload phylloseq
 
-bacterias<-qza_to_phyloseq(features = "TablaDADA2Bacterias.qza",tree="ArbolRootedBacterias.qza",taxonomy = "TaxonomiaBacterias.qza")
+bacterias<-qza_to_phyloseq(features = "TablaDADA2Bacterias.qza",tree="ArbolRootedBacterias.qza",taxonomy = "taxonomy_bacterias.qza")
 metadatos_bacterias <- read_excel("metadatos_bacterias_completos.xlsx")
 View(metadatos_bacterias)
 
@@ -26,13 +26,9 @@ colnames(metadatos_bacterias)[36]<-"NH4"
 
 metadatos_bacterias<-subset(metadatos_bacterias,id!="BF5A")
 metadatos_bacterias<-subset(metadatos_bacterias,id!="BF5C")
+metadatos_bacterias$body_size<-log(metadatos_bacterias$Altura)+log(metadatos_bacterias$C_base)+log(metadatos_bacterias$Long_hojaNS)
 sample_data(bacterias)<-metadatos_bacterias
 
-
-# R objects for ASV table and taxonomy
-
-ASV_bacterias<-as.data.frame(otu_table(bacterias))
-taxonomy_bacterias<-as.data.frame(tax_table(bacterias))
 
 # Subset without control samples
 
@@ -40,3 +36,5 @@ bacterias_bien<-subset_samples(bacterias,ID_individuo!="Control")
 
 bacterias_bien<-subset_samples(bacterias,id!="BF5A")
 bacterias_bien<-subset_samples(bacterias,id!="BF5C")
+
+View(bacterias_bien@sam_data)
