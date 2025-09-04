@@ -1,57 +1,56 @@
 # Alpha diversity
 
-diversity_alpha_fungi<-alpha(fungi_rare,index = "all") 
-diversity_alpha_fungi$id<-rownames(diversity_alpha_fungi)
+diversidad_alfa_hongos<-alpha(hongos_rare,index = "all") 
+diversidad_alfa_hongos$id<-rownames(diversidad_alfa_hongos)
 
-diversity_alpha_fungi<-left_join(metadata_fungi[1:34,1:5],diversity_alpha_fungi,by="id")
+# Importing Faith's PD from .qza
 
+faith_pd_hongos<-read_qza("faith_pd_vector_hongos.qza")
+FaithsPD_hongos<-as.data.frame(faith_pd_hongos$data)
+FaithsPD_hongos$id<-rownames(FaithsPD_hongos)
+diversidad_alfa_hongos<-left_join(diversidad_alfa_hongos,FaithsPD_hongos,by="id")
+
+diversidad_alfa_hongos<-left_join(metadatos_hongos[1:34,1:5],diversidad_alfa_hongos,by="id")
 
 # Plots
 
-# Linnear models to find abline
+# Shannon vs sample
 
-# Phyllosphere fungi
-
-diversity_alpha_fungi %>% as_tibble() %>%
-  mutate(Elevation = factor(Elevation,levels= c(1978,2007,2018,2178,2210)))%>%
-  mutate(Elevation3 = as.numeric(Elevation),.before=Elevation) %>%
-  filter(Sample_type=="Phyllosphere") %>%
-  lm(diversity_shannon ~ Elevation3,data=.) %>% summary(.)
-
-
-# Rhizosphere fungi
-diversity_alpha_fungi %>% as_tibble() %>%
-  mutate(Elevation = factor(Elevation,levels= c(1978,2007,2018,2178,2210)))%>%
-  mutate(Elevation3 = as.numeric(Elevation),.before=Elevation) %>%
-  filter(Sample_type=="Rhizosphere") %>%
-  lm(diversity_shannon ~ Elevation3,data=.) %>% summary(.)
-
-shannon_fungi_phyllo<-ggplot(data = subset(diversity_alpha_fungi,Sample_type=="Phyllosphere"),aes(x=Elevation, y=diversity_shannon,group=Elevation))+
-  geom_point(aes(fill=Elevation),shape=21,size=5,colour="black")+
+ggplot(data = diversidad_alfa_hongos,aes(x=Tipo_muestra,y=diversity_shannon,fill=Tipo_muestra))+
+  geom_boxplot(color="black")+
   theme_biome_utils()+
-  xlab("Elevation (masl)")+ylab("Shannon Index (H)") +
+  xlab("Sample type")+ylab("H")+
   theme(legend.position = "none")+
-  scale_fill_manual(values=colores)+
-  geom_abline(intercept =5.322642,slope = -0.002603)+
-  ggtitle("c. Fungal phyllosphere")+
-  theme(plot.title = element_text(size=16))+
-  theme(axis.title = element_text(size=16))
+  scale_fill_manual(values=moma.colors("Warhol",3))+
+  scale_x_discrete(labels=c("Phyllosphere","Rhizosphere","Bulk soil"))
 
-shannon_fungi_rhizo<-ggplot(data = subset(diversity_alpha_fungi,Sample_type=="Rhizosphere"),aes(x=Elevation, y=diversity_shannon,fill=Elevation))+
-  geom_point(aes(fill=Elevation),shape=21,size=5,colour="black")+
+# Shannon vs elevation
+
+ggplot(data = diversidad_alfa_hongos,aes(x=Altitud, y=diversity_shannon,fill=Altitud))+
+  geom_boxplot(color="black")+
   theme_biome_utils()+
-  xlab("Elevation (masl)")+ylab("Shannon Index (H)") +
+  xlab("Elevation")+ylab("H") +
   theme(legend.position = "none")+
-  scale_fill_manual(values=colores)+
-  geom_abline(intercept =4.91582,slope = -0.04141)+
-  ggtitle("d. Fungal rhizosphere")+
-  theme(plot.title = element_text(size=16))+
-  theme(axis.title = element_text(size=16))
+  scale_fill_manual(values=moma.colors("Warhol",5))
+
+# Full plots (elevation+sample type)
+
+# Shannon 
+
+ggplot(data = diversidad_alfa_hongos,aes(x=Altitud,y=diversity_shannon,fill=Tipo_muestra))+
+  geom_boxplot(color="black")+
+  theme_biome_utils()+
+  xlab("Elevation")+ylab("H")+
+  theme(legend.position = "bottom")+
+  scale_fill_manual(name="Sample type", label=c("Phyllosphere","Rhizosphere","Bulk soil"),values=moma.colors("Warhol",3))
 
 ## Statistical analysis
 
 # Two way ANOVA Shannon
 
-anova_shannon_fungi<-aov(diversity_shannon~Sample_type*Elevation,data = diversity_alpha_fungi)
-summary(anova_shannon_fungi)
+anova_shannon_hongos<-aov(diversity_shannon~Tipo_muestra*Altitud,data = diversidad_alfa_hongos)
+summary(anova_shannon_hongos)
 
+# Sample type ANOVA
+anova_shannon_hongos2<-aov(diversity_shannon~Tipo_muestra,data = diversidad_alfa_hongos)
+summary(anova_shannon_bacterias2)
