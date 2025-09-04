@@ -106,3 +106,65 @@ abundancias_hongos_core$total<-rowSums(abundancias_hongos_core[2:6])
 abundancias_hongos_core<-arrange(abundancias_hongos_core,total)
 abundancias_hongos_core1<-subset(abundancias_hongos_core,Genus!="g__")
 abundancias_hongos_core1
+
+# Relative abundances of core microbiome by sample type
+# Data
+core_sample_type_hongos<-venn_hongos_genus_datos$otu_table
+core_sample_type_hongos$asv<-row.names(core_sample_type_hongos)
+
+# Phyllosphere
+core_sample_type_hongos_filo<-subset(core_sample_type_hongos,Phyllosphere>0&Soil==0&Rhizosphere==0)
+core_sample_type_hongos_filo<-core_sample_type_hongos_filo[,c(1,4)]
+
+# Rhizosphere
+core_sample_type_hongos_rizo<-subset(core_sample_type_hongos,Phyllosphere==0&Soil==0&Rhizosphere>0)
+core_sample_type_hongos_rizo<-core_sample_type_hongos_rizo[,c(2,4)]
+
+# Abundances estimation
+
+# Phyllosphere
+# Data as compositional
+relativas_hongos_filo<-microbiome::transform(hongos_rare,"compositional")
+
+asv_hongos_filosfera<-core_sample_type_hongos_filo$asv
+
+
+otus_hongos_filo_abundancias<-as.data.frame(relativas_hongos_filo@otu_table)
+otus_hongos_filo_abundancias$asv<-rownames(otus_hongos_filo_abundancias)
+# Bacteria in core microbiome
+core_abundancias_hongos_filo<-subset(otus_hongos_filo_abundancias,asv %in% asv_hongos_filosfera)
+core_abundancias_hongos_filo<-core_abundancias_hongos_filo[,c(1:13)]
+# Bacteria NOT in core microbiome
+core_resto_hongos_filo<-otus_hongos_filo_abundancias[!(otus_hongos_filo_abundancias$asv %in% asv_hongos_filosfera),]
+core_resto_hongos_filo<-core_resto_hongos_filo[,c(1:13)]
+
+# Data table joining both core and non-core
+core_abundancias_full_hongos_filo<-bind_rows(colSums(core_abundancias_hongos_filo),colSums(core_resto_hongos_filo))
+rownames(core_abundancias_full_hongos_filo)[1]<-"core"
+rownames(core_abundancias_full_hongos_filo)[2]<-"no_core"
+
+colSums(core_abundancias_full_hongos_filo) # Checking proportions sum 1
+summary(t(core_abundancias_full_hongos_filo) # Max and min abundances of the core microbiome
+
+# Rhizosphere
+# Data as compositional
+relativas_hongos_rizo<-microbiome::transform(hongos_rare,"compositional")
+
+asv_hongos_rizosfera<-core_sample_type_hongos_rizo$asv
+
+otus_hongos_rizo_abundancias<-as.data.frame(relativas_hongos_rizo@otu_table)
+otus_hongos_rizo_abundancias$asv<-rownames(otus_hongos_rizo_abundancias)
+# Bacteria in core microbiome
+core_abundancias_hongos_rizo<-subset(otus_hongos_rizo_abundancias,asv %in% asv_hongos_rizosfera)
+core_abundancias_hongos_rizo<-core_abundancias_hongos_rizo[,c(14:28)]
+# Bacteria NOT in core microbiome
+core_resto_hongos_rizo<-otus_hongos_rizo_abundancias[!(otus_hongos_rizo_abundancias$asv %in% asv_hongos_rizosfera),]
+core_resto_hongos_rizo<-core_resto_hongos_rizo[,c(1:13)]
+
+# Data table joining both core and non-core
+core_abundancias_full_hongos_rizo<-bind_rows(colSums(core_abundancias_hongos_rizo),colSums(core_resto_hongos_rizo))
+rownames(core_abundancias_full_hongos_rizo)[1]<-"core"
+rownames(core_abundancias_full_hongos_rizo)[2]<-"no_core"
+
+colSums(core_abundancias_full_hongos_filo)  # Checking proportions sum 1
+summary(t(core_abundancias_full_hongos_filo) # Max and min abundances of the core microbiome
