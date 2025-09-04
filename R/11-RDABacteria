@@ -1,0 +1,77 @@
+# Phyllosphere
+# Data
+rda_bacterias_filo <- tax_fix(bacterias_filosfera)
+rda_bacterias_filo <- phyloseq_validate(rda_bacterias_filo, remove_undetected = TRUE)
+
+class(rda_bacterias_filo@sam_data$MO)<-"numeric"
+
+#RDA Model with all variables
+rda_bacterias_filo_data<- rda_bacterias_filo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_bacterias_filo@sam_data)[c(18,20,22,23,24,28,35,37,38)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_get()
+rda_bacterias_filo_data
+rda_bacterias_rizo_data$CCA
+rda_hongos_filo_data$CCA$biplot
+rda_hongos_rizo_data$CCA$biplot
+
+# Taxa
+clases_rda_bacterias<-as.data.frame(total_bacterias@tax_table)
+clases_rda_bacterias
+rda_bacterias@sam_data$Altitud_num<-as.numeric(rda_bacterias@sam_data$Altitud)
+View(rda_bacterias@sam_data)
+clases_rda_bacterias<-as.data.frame(total_bacterias@tax_table)
+
+# Ordistep for variable selection
+ordistep(rda_bacterias_filo_data,perm.max=200)
+
+# RDA reduced model
+rda_bacterias_filo_data<- rda_bacterias_filo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_bacterias_filo@sam_data)[c(18,20,22,37,38)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_get()
+
+# ANOVA to check significance
+anova.cca(rda_bacterias_filo_data)
+
+# Rhizosphere 
+# Data
+rda_bacterias_rizo <- tax_fix(bacterias_rizosfera)
+rda_bacterias_rizo <- phyloseq_validate(rda_bacterias_rizo, remove_undetected = TRUE)
+View(rda_bacterias@tax_table)
+class(rda_bacterias_rizo@sam_data$MO)<-"numeric"
+
+#RDA model with all variableds
+
+rda_bacterias_rizo_data<- rda_bacterias_rizo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_bacterias_rizo@sam_data)[c(18,20,22,23,24,28,35,37,38)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_get()
+rda_bacterias_rizo_data
+clases_rda_bacterias<-as.data.frame(total_bacterias@tax_table)
+clases_rda_bacterias
+rda_bacterias@sam_data$Altitud_num<-as.numeric(rda_bacterias@sam_data$Altitud)
+View(rda_bacterias@sam_data)
+
+# Selecting taxa
+clases_rda_bacterias<-as.data.frame(total_bacterias@tax_table)
+
+# Ordistep for variable selection
+ordistep(rda_bacterias_rizo_data,perm.max=200)
+
+# RDA reduced model
+rda_bacterias_rizo_data<- rda_bacterias_rizo %>%
+  tax_transform("clr", rank = "Class") %>%
+  ord_calc(
+    constraints = colnames(rda_bacterias_rizo@sam_data)[c(23,22,28)],method = "RDA",
+    scale_cc = FALSE) %>% 
+  ord_get()
+
+# ANOVA to check significance
+anova.cca(rda_bacterias_rizo_data)
