@@ -6,7 +6,6 @@ bacterias<-qza_to_phyloseq(features = "TablaDADA2Bacterias.qza",tree="ArbolRoote
 metadatos_bacterias <- read_excel("metadatos_bacterias_completos.xlsx")
 View(metadatos_bacterias)
 
-
 # Data format
 metadatos_bacterias<-as.data.frame(metadatos_bacterias)
 colnames(metadatos_bacterias)[1]<-"id"
@@ -28,7 +27,6 @@ metadatos_bacterias<-subset(metadatos_bacterias,id!="BF5A")
 metadatos_bacterias<-subset(metadatos_bacterias,id!="BF5C")
 metadatos_bacterias$body_size<-log(metadatos_bacterias$Altura)+log(metadatos_bacterias$C_base)+log(metadatos_bacterias$Long_hojaNS)
 sample_data(bacterias)<-metadatos_bacterias
-
 
 # Subset without control samples
 
